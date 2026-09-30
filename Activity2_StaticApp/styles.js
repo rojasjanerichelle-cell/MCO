@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
 
   bottomSpace: {
-    height: 30,
+    height: 35,
   },
 });
 
