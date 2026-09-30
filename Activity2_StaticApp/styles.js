@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 
   pending: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#F2994A',
   },
 
