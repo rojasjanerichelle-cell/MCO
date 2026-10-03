@@ -19,7 +19,7 @@ export default function App() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.smallText}>Hi dear 👋</Text>
+            <Text style={styles.smallText}>Hello! 👋</Text>
             <Text style={styles.title}>My Dashboard</Text>
           </View>
 
