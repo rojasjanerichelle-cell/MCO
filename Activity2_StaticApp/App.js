@@ -86,7 +86,7 @@ export default function App() {
               </Text>
 
               <Text style={styles.actionSubtitle}>
-                View your subjects
+                View your courses
               </Text>
             </View>
           </View>
