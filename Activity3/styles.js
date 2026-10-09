@@ -1,151 +1,92 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StatusBar, StyleSheet } from 'react-native';
+
+// Palette
+const colors = {
+  blue: '#2B3FE0',
+  blueDeep: '#1F2FB5',
+  blueTint: '#A9B3FF',
+  yellow: '#FFD23F',
+  ink: '#14172B',
+  muted: '#7A7F99',
+  faint: '#B9BDD0',
+  line: '#E8EAF3',
+  sheet: '#FFFFFF',
+  danger: '#D6453D',
+};
+
+const topInset = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 56;
 
 const styles = StyleSheet.create({
-
-  // MAIN CONTAINER
+  // LAYOUT
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FB',
-    paddingHorizontal: 20,
-    paddingTop: 55,
+    backgroundColor: colors.blue,
   },
 
-  // HEADER
+  // HEADER (colour block)
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  greeting: {
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 2,
-    color: '#6C63FF',
-    marginBottom: 5,
-  },
-
-  title: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#202124',
-  },
-
-  subtitle: {
-    fontSize: 15,
-    color: '#777',
-    marginTop: 8,
-    marginBottom: 22,
-  },
-
-  // TASK COUNTER
-  taskCount: {
-    width: 65,
-    height: 65,
-    backgroundColor: '#6C63FF',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  taskCountNumber: {
-    color: 'white',
-    fontSize: 21,
-    fontWeight: '800',
-  },
-
-  taskCountLabel: {
-    color: '#E8E6FF',
-    fontSize: 11,
-    marginTop: 1,
-  },
-
-  // INPUT
-  inputCard: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderRadius: 18,
-    padding: 7,
-    alignItems: 'center',
-    marginBottom: 25,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-
-    elevation: 3,
-  },
-
-  input: {
-    flex: 1,
-    height: 48,
-    paddingHorizontal: 15,
-    fontSize: 15,
-    color: '#333',
-  },
-
-  addButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: '#6C63FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  addText: {
-    color: 'white',
-    fontSize: 28,
-    fontWeight: '300',
-    marginTop: -2,
-  },
-
-  // SECTION
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-
-  sectionTitle: {
-    fontSize: 19,
-    fontWeight: '700',
-    color: '#202124',
-  },
-
-  sectionCount: {
-    fontSize: 13,
-    color: '#888',
-  },
-
-  // TASK LIST
-  list: {
+    paddingTop: topInset + 8,
+    paddingHorizontal: 24,
     paddingBottom: 30,
   },
 
-  // TASK CARD
-  taskCard: {
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.blueTint,
+  },
+
+  bigCount: {
+    fontSize: 54,
+    fontWeight: '800',
+    letterSpacing: -2,
+    color: '#FFFFFF',
+    marginTop: 6,
+  },
+
+  bigCountLabel: {
+    fontSize: 18,
+    fontWeight: '500',
+    letterSpacing: 0,
+    color: colors.blueTint,
+  },
+
+  progressTrack: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.blueDeep,
+    marginTop: 18,
+    overflow: 'hidden',
+  },
+
+  progressFill: {
+    height: '100%',
+    borderRadius: 4,
+    backgroundColor: colors.yellow,
+  },
+
+  // SHEET (white panel)
+  sheet: {
+    flex: 1,
+    backgroundColor: colors.sheet,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    paddingTop: 8,
+  },
+
+  list: {
+    paddingHorizontal: 24,
+    paddingTop: 14,
+    paddingBottom: 24,
+  },
+
+  // TASK ROW
+  taskRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 15,
-    marginBottom: 12,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.06,
-    shadowRadius: 7,
-
-    elevation: 2,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.line,
   },
 
   taskContent: {
@@ -154,54 +95,97 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  // CHECK CIRCLE
-  checkCircle: {
-    width: 27,
-    height: 27,
-    borderRadius: 14,
+  checkBox: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
     borderWidth: 2,
-    borderColor: '#6C63FF',
+    borderColor: colors.ink,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 13,
+    marginRight: 16,
   },
 
-  checkCircleCompleted: {
-    backgroundColor: '#6C63FF',
+  checkBoxCompleted: {
+    backgroundColor: colors.yellow,
+    borderColor: colors.yellow,
   },
 
   checkMark: {
-    color: 'white',
-    fontSize: 17,
-    fontWeight: 'bold',
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: '900',
   },
 
   taskText: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
+    fontSize: 17,
+    lineHeight: 23,
+    fontWeight: '500',
+    color: colors.ink,
   },
 
   completedText: {
     textDecorationLine: 'line-through',
-    color: '#999',
+    color: colors.faint,
+    fontWeight: '400',
   },
 
-  // DELETE BUTTON
   deleteButton: {
     width: 34,
     height: 34,
-    borderRadius: 10,
-    backgroundColor: '#FFF0F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+
+  deleteText: {
+    color: colors.faint,
+    fontSize: 24,
+    lineHeight: 26,
+  },
+
+  // INPUT (docked at bottom)
+  inputBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 18,
+    borderTopWidth: 1,
+    borderTopColor: colors.line,
+    backgroundColor: colors.sheet,
+  },
+
+  input: {
+    flex: 1,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#F2F3F9',
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: colors.ink,
+  },
+
+  addButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: colors.blue,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
   },
 
-  deleteText: {
-    color: '#E74C3C',
-    fontSize: 24,
-    lineHeight: 25,
+  addButtonDisabled: {
+    backgroundColor: colors.faint,
+  },
+
+  addText: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    lineHeight: 30,
+    fontWeight: '400',
   },
 
   // EMPTY STATE
@@ -209,41 +193,26 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 100,
   },
 
   emptyContainer: {
     alignItems: 'center',
-    paddingHorizontal: 35,
-  },
-
-  emptyIcon: {
-    width: 65,
-    height: 65,
-    borderRadius: 33,
-    backgroundColor: '#E9E7FF',
-    color: '#6C63FF',
-    fontSize: 32,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    lineHeight: 65,
-    marginBottom: 15,
+    paddingHorizontal: 40,
   },
 
   emptyTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#333',
-    marginBottom: 8,
+    color: colors.ink,
+    marginBottom: 6,
   },
 
   emptyText: {
     textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 21,
-    color: '#999',
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.muted,
   },
-
 });
 
 export default styles;

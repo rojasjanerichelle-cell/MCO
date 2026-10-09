@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import styles from './styles';
@@ -14,19 +16,21 @@ export default function App() {
   const [item, setItem] = useState('');
   const [items, setItems] = useState([]);
 
+  const doneCount = items.filter((task) => task.completed).length;
+  const remaining = items.length - doneCount;
+  const progress = items.length === 0 ? 0 : doneCount / items.length;
+  const canAdd = item.trim() !== '';
+
   // Add a new item
   const addItem = () => {
-    if (item.trim() === '') {
+    if (!canAdd) {
       return;
     }
 
-    const newItem = {
-      id: Date.now().toString(),
-      name: item.trim(),
-      completed: false,
-    };
-
-    setItems([...items, newItem]);
+    setItems([
+      ...items,
+      { id: Date.now().toString(), name: item.trim(), completed: false },
+    ]);
     setItem('');
   };
 
@@ -34,9 +38,7 @@ export default function App() {
   const toggleComplete = (id) => {
     setItems(
       items.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
+        task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
   };
@@ -47,136 +49,102 @@ export default function App() {
   };
 
   // Display each item
-  const renderItem = ({ item }) => {
-    return (
-      <View style={styles.taskCard}>
-
-        <TouchableOpacity
-          style={styles.taskContent}
-          onPress={() => toggleComplete(item.id)}
+  const renderItem = ({ item }) => (
+    <View style={styles.taskRow}>
+      <TouchableOpacity
+        style={styles.taskContent}
+        activeOpacity={0.7}
+        onPress={() => toggleComplete(item.id)}
+      >
+        <View
+          style={[styles.checkBox, item.completed && styles.checkBoxCompleted]}
         >
-          <View
-            style={[
-              styles.checkCircle,
-              item.completed && styles.checkCircleCompleted,
-            ]}
-          >
-            {item.completed && (
-              <Text style={styles.checkMark}>✓</Text>
-            )}
-          </View>
+          {item.completed && <Text style={styles.checkMark}>✓</Text>}
+        </View>
 
-          <Text
-            style={[
-              styles.taskText,
-              item.completed && styles.completedText,
-            ]}
-          >
-            {item.name}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => deleteItem(item.id)}
+        <Text
+          style={[styles.taskText, item.completed && styles.completedText]}
         >
-          <Text style={styles.deleteText}>×</Text>
-        </TouchableOpacity>
+          {item.name}
+        </Text>
+      </TouchableOpacity>
 
-      </View>
-    );
-  };
+      <TouchableOpacity
+        style={styles.deleteButton}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        onPress={() => deleteItem(item.id)}
+      >
+        <Text style={styles.deleteText}>×</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-
-      <StatusBar barStyle="dark-content" />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <StatusBar barStyle="light-content" />
 
       {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.greeting}>MY TASKS</Text>
-          <Text style={styles.title}>To-Do List</Text>
-        </View>
-
-        <View style={styles.taskCount}>
-          <Text style={styles.taskCountNumber}>
-            {items.length}
+        <Text style={styles.title}>To-Do List</Text>
+        <Text style={styles.bigCount}>
+          {remaining}{' '}
+          <Text style={styles.bigCountLabel}>
+            {remaining === 1 ? 'task left' : 'tasks left'}
           </Text>
+        </Text>
 
-          <Text style={styles.taskCountLabel}>
-            Tasks
-          </Text>
+        <View style={styles.progressTrack}>
+          <View
+            style={[styles.progressFill, { width: `${progress * 100}%` }]}
+          />
         </View>
       </View>
 
-      {/* Description */}
-      <Text style={styles.subtitle}>
-        Stay organized and get things done.
-      </Text>
-
-      {/* Input */}
-      <View style={styles.inputCard}>
-
-        <TextInput
-          style={styles.input}
-          placeholder="What do you need to do?"
-          placeholderTextColor="#999"
-          value={item}
-          onChangeText={setItem}
-          onSubmitEditing={addItem}
+      {/* Sheet */}
+      <View style={styles.sheet}>
+        <FlatList
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={(task) => task.id}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={
+            items.length === 0 ? styles.emptyList : styles.list
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyTitle}>No tasks yet</Text>
+              <Text style={styles.emptyText}>
+                Type a task below and tap + to add it.
+              </Text>
+            </View>
+          }
         />
 
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={addItem}
-        >
-          <Text style={styles.addText}>+</Text>
-        </TouchableOpacity>
+        {/* Input */}
+        <View style={styles.inputBar}>
+          <TextInput
+            style={styles.input}
+            placeholder="Add a task"
+            placeholderTextColor="#B9BDD0"
+            value={item}
+            onChangeText={setItem}
+            onSubmitEditing={addItem}
+            returnKeyType="done"
+          />
 
+          <TouchableOpacity
+            style={[styles.addButton, !canAdd && styles.addButtonDisabled]}
+            onPress={addItem}
+            disabled={!canAdd}
+          >
+            <Text style={styles.addText}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      {/* Section title */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          Your Tasks
-        </Text>
-
-        <Text style={styles.sectionCount}>
-          {items.length}{' '}
-          {items.length === 1 ? 'item' : 'items'}
-        </Text>
-      </View>
-
-      {/* Task List */}
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={
-          items.length === 0
-            ? styles.emptyList
-            : styles.list
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-
-            <Text style={styles.emptyIcon}>✓</Text>
-
-            <Text style={styles.emptyTitle}>
-              No tasks yet
-            </Text>
-
-            <Text style={styles.emptyText}>
-              Add your first task above and start
-              getting things done!
-            </Text>
-
-          </View>
-        }
-      />
-
-    </View>
+    </KeyboardAvoidingView>
   );
 }
